@@ -3,6 +3,7 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
+import {Navigate} from 'react-router';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -19,20 +20,20 @@ const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
-const MainRoutes = {
+const MainRoutes = (isAuth) => {return {
   path: '/',
   element: <MainLayout />,
   children: [
     {
       path: '/',
-      element: <DashboardDefault />
+      element: isAuth ?  <DashboardDefault /> : <Navigate to="/login"/>
     },
     {
       path: 'dashboard',
       children: [
         {
           path: 'default',
-          element: <DashboardDefault />
+          element: isAuth ?  <DashboardDefault /> : <Navigate to="/login"/>
         }
       ]
     },
@@ -41,7 +42,7 @@ const MainRoutes = {
       children: [
         {
           path: 'util-typography',
-          element: <UtilsTypography />
+          element: isAuth ?  <UtilsTypography /> : <Navigate to="/login"/>
         }
       ]
     },
@@ -50,7 +51,7 @@ const MainRoutes = {
       children: [
         {
           path: 'util-color',
-          element: <UtilsColor />
+          element: isAuth ?  <UtilsColor /> : <Navigate to="/login"/>
         }
       ]
     },
@@ -59,7 +60,7 @@ const MainRoutes = {
       children: [
         {
           path: 'util-shadow',
-          element: <UtilsShadow />
+          element: isAuth ?  <UtilsShadow /> : <Navigate to="/login"/>
         }
       ]
     },
@@ -68,7 +69,7 @@ const MainRoutes = {
       children: [
         {
           path: 'tabler-icons',
-          element: <UtilsTablerIcons />
+          element: isAuth ?  <UtilsTablerIcons /> : <Navigate to="/login"/>
         }
       ]
     },
@@ -77,15 +78,15 @@ const MainRoutes = {
       children: [
         {
           path: 'material-icons',
-          element: <UtilsMaterialIcons />
+          element: isAuth ?  <UtilsMaterialIcons /> : <Navigate to="/login"/>
         }
       ]
     },
     {
       path: 'sample-page',
-      element: <SamplePage />
+      element: isAuth ?  <SamplePage /> : <Navigate to="/login"/>
     }
   ]
-};
+}};
 
 export default MainRoutes;

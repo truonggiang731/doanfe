@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -28,6 +28,7 @@ import { Formik } from 'formik';
 // project imports
 import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
+import {apiCall} from 'apis';
 
 // assets
 import Visibility from '@mui/icons-material/Visibility';
@@ -43,6 +44,17 @@ const FirebaseLogin = ({ ...others }) => {
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const customization = useSelector((state) => state.customization);
   const [checked, setChecked] = useState(true);
+
+  // [BEGIN] My code
+  const loginForm = useState({
+    usernameOrEmail: '',
+    password: ''
+  })
+
+  const dispatch = useDispatch();
+
+
+  // [END] My code
 
   const googleHandler = async () => {
     console.error('Login');
@@ -60,7 +72,7 @@ const FirebaseLogin = ({ ...others }) => {
   return (
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>
-        <Grid item xs={12}>
+        <Grid display={'none'} item xs={12}>
           <AnimateButton>
             <Button
               disableElevation
@@ -81,7 +93,7 @@ const FirebaseLogin = ({ ...others }) => {
             </Button>
           </AnimateButton>
         </Grid>
-        <Grid item xs={12}>
+        <Grid display={'none'} item xs={12}>
           <Box
             sx={{
               alignItems: 'center',
@@ -120,8 +132,8 @@ const FirebaseLogin = ({ ...others }) => {
 
       <Formik
         initialValues={{
-          email: 'info@codedthemes.com',
-          password: '123456',
+          email: '',
+          password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -129,7 +141,13 @@ const FirebaseLogin = ({ ...others }) => {
           password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+          console.log(scriptedRef);
           try {
+            const res = await apiCall('auth_login', {
+              usernameOrEmail: values.email,
+              password: values.password
+            });
+            dispatch({ type: '@auth/LOGIN', payload: { token: res.accessToken } });
             if (scriptedRef.current) {
               setStatus({ success: true });
               setSubmitting(false);
@@ -196,7 +214,7 @@ const FirebaseLogin = ({ ...others }) => {
                 </FormHelperText>
               )}
             </FormControl>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
+            <Stack display={'none'} direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
               <FormControlLabel
                 control={
                   <Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />
@@ -215,7 +233,8 @@ const FirebaseLogin = ({ ...others }) => {
 
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary">
+                <Button
+                  disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary">
                   Sign in
                 </Button>
               </AnimateButton>

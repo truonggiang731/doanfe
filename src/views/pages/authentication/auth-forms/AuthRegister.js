@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 // material-ui
@@ -35,6 +35,7 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import {apiCall} from 'apis';
 
 // ===========================|| FIREBASE - REGISTER ||=========================== //
 
@@ -43,6 +44,7 @@ const FirebaseRegister = ({ ...others }) => {
   const scriptedRef = useScriptRef();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const customization = useSelector((state) => state.customization);
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [checked, setChecked] = useState(true);
 
@@ -74,7 +76,7 @@ const FirebaseRegister = ({ ...others }) => {
   return (
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>
-        <Grid item xs={12}>
+        <Grid display={'none'} item xs={12}>
           <AnimateButton>
             <Button
               variant="outlined"
@@ -94,7 +96,7 @@ const FirebaseRegister = ({ ...others }) => {
             </Button>
           </AnimateButton>
         </Grid>
-        <Grid item xs={12}>
+        <Grid display={'none'} item xs={12}>
           <Box sx={{ alignItems: 'center', display: 'flex' }}>
             <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
             <Button
@@ -130,12 +132,22 @@ const FirebaseRegister = ({ ...others }) => {
           password: '',
           submit: null
         }}
+
         validationSchema={Yup.object().shape({
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
+            const res = await apiCall('auth_signup', {
+              name: values.fname + ' ' + values.lname,
+              username: values.email,
+              email: values.email,
+              password: values.password
+            });
+
+            navigate('/login');
+
             if (scriptedRef.current) {
               setStatus({ success: true });
               setSubmitting(false);
@@ -246,7 +258,7 @@ const FirebaseRegister = ({ ...others }) => {
               </FormControl>
             )}
 
-            <Grid container alignItems="center" justifyContent="space-between">
+            <Grid display={'none'} container alignItems="center" justifyContent="space-between">
               <Grid item>
                 <FormControlLabel
                   control={
