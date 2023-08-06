@@ -1,8 +1,8 @@
 // assets
-import { IconBrandChrome, IconHelp } from '@tabler/icons';
+import { IconBuildingWarehouse, IconBrandChrome, IconHelp } from '@tabler/icons';
 
 // constant
-const icons = { IconBrandChrome, IconHelp };
+const icons = { IconBrandChrome,IconBuildingWarehouse, IconHelp };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -11,22 +11,38 @@ const other = {
   type: 'group',
   children: [
     {
-      id: 'sample-page',
-      title: 'Sample Page',
-      type: 'item',
-      url: '/sample-page',
-      icon: icons.IconBrandChrome,
-      breadcrumbs: false
+      id: 'manage',
+      title: 'Quản lý căn hộ',
+      type: 'collapse',
+      // url: '/manage',
+      icon: icons.IconBuildingWarehouse,
+      // breadcrumbs: false,
+      target: true,
+      children: [
+        {
+          id: 'addHouse',
+          title: 'Thêm căn hộ',
+          type: 'item',
+          url: '/manage/add',
+          target: false
+        },
+        {
+          id: 'deletehouse',
+          title: 'Xóa căn hộ',
+          type: 'item',
+          url: '/manage/delete',
+          target: false
+        },
+        {
+          id: 'updatehouse',
+          title: 'Sửa căn hộ',
+          type: 'item',
+          url: '/manage/update',
+          target: false
+        },
+      ]
     },
-    {
-      id: 'documentation',
-      title: 'Documentation',
-      type: 'item',
-      url: 'https://codedthemes.gitbook.io/berry/',
-      icon: icons.IconHelp,
-      external: true,
-      target: true
-    }
+
   ]
 };
 

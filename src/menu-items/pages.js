@@ -34,7 +34,7 @@ const pages = {
           type: 'item',
           url: '/pages/register/register3',
           target: true
-        }
+        },
       ]
     }
   ]

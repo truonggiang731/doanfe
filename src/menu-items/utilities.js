@@ -1,10 +1,11 @@
 // assets
-import { IconTypography, IconPalette, IconShadow, IconWindmill } from '@tabler/icons';
+import {IconBuildingWarehouse, IconTypography, IconPalette, IconShadow, IconWindmill } from '@tabler/icons';
 
 // constant
 const icons = {
   IconTypography,
   IconPalette,
+  IconBuildingWarehouse,
   IconShadow,
   IconWindmill
 };
@@ -17,19 +18,11 @@ const utilities = {
   type: 'group',
   children: [
     {
-      id: 'util-typography',
-      title: 'Typography',
-      type: 'item',
-      url: '/utils/util-typography',
-      icon: icons.IconTypography,
-      breadcrumbs: false
-    },
-    {
       id: 'util-color',
       title: 'Color',
       type: 'item',
       url: '/utils/util-color',
-      icon: icons.IconPalette,
+      icon: icons.IconBuildingWarehouse,
       breadcrumbs: false
     },
     {

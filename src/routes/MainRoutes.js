@@ -4,6 +4,9 @@ import { lazy } from 'react';
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import {Navigate} from 'react-router';
+import AddHouse from 'ui-component/ManageHouse/AddHouse';
+import DeleteHouse from 'ui-component/ManageHouse/DeleteHouse';
+import UpdateHouse from 'ui-component/ManageHouse/UpdateHouse';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -16,7 +19,6 @@ const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialI
 const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
 
 // sample page routing
-const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -38,13 +40,15 @@ const MainRoutes = (isAuth) => {return {
       ]
     },
     {
-      path: 'utils',
-      children: [
-        {
-          path: 'util-typography',
-          element: isAuth ?  <UtilsTypography /> : <Navigate to="/login"/>
-        }
-      ]
+          path: 'manage/add',
+          element: <AddHouse />
+    },
+    {
+          path: 'manage/delete',
+          element: <DeleteHouse />
+    },{
+          path: 'manage/update',
+          element: <UpdateHouse />
     },
     {
       path: 'utils',
@@ -52,15 +56,6 @@ const MainRoutes = (isAuth) => {return {
         {
           path: 'util-color',
           element: isAuth ?  <UtilsColor /> : <Navigate to="/login"/>
-        }
-      ]
-    },
-    {
-      path: 'utils',
-      children: [
-        {
-          path: 'util-shadow',
-          element: isAuth ?  <UtilsShadow /> : <Navigate to="/login"/>
         }
       ]
     },
@@ -82,10 +77,6 @@ const MainRoutes = (isAuth) => {return {
         }
       ]
     },
-    {
-      path: 'sample-page',
-      element: isAuth ?  <SamplePage /> : <Navigate to="/login"/>
-    }
   ]
 }};
 
