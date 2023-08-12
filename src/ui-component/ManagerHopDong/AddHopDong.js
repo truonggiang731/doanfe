@@ -6,37 +6,40 @@ import useAddCanHoQuery from 'hooks/UseAddCanHoQuery';
 import { useMutation } from 'react-query';
 import useLoaiCanHoQuery from 'hooks/useLoaiCanHoQuery';
 import useToaNhaQuery from 'hooks/useToaNhaQuery';
+import useDichVuQuery from 'hooks/useDichVuQuery';
+import useUserQuery from 'hooks/useUserQuery';
+import useAddHopDongQuery from 'hooks/useAddHopDongQuery';
+import useHopDongQuery from 'hooks/useHopDongQuery';
 const { TextArea } = Input;
 
-const AddHouse = () => {
+const AddHopDong = () => {
   const [form] = Form.useForm();
   const [requiredMark, setRequiredMarkType] = useState('optional');
-  const [typeHouse, setTypeHouse] = useState('');
-  const [name,setName]=useState('')
-  const [note, setNote] = useState('');
-  const [typeBuild, setTypeBuilding] = useState('')
+  const [hopDong, setHopDong] = useState([])
   const [canHo, setCanHo] = useState([])
-  const [loaiCanHo, setLoaiCanHo] = useState([])
-  const [toaNha, setToaNha] = useState([])
+  const [user, setUser] = useState([])
+  const [dichVu, setDichVu] = useState([])
 
   const [messageApi, com] = message.useMessage();
 
-  const [canHoDetail, setCanHoDetail] = useState({
-    tenCanHo: '',
-    toaNhaId: 0,
-    loaiCanHoId: 0,
-    ghiChu: ''
+  const [hopDongDetail, setHopDongDetail] = useState({
+    ngayDangKy: '',
+    ngayHetHan: '',
+    userId: 0,
+    CanHoId: 0,
+    dichVuId: 0,
   })
 
-  const addCanHoQuery = useAddCanHoQuery();
-  const loaiCanHoQuery = useLoaiCanHoQuery();
+  const addHopDongQuery = useAddHopDongQuery();
+  const hopDongQuery = useHopDongQuery();
   const canHoQuery = useCanHoQuery();
-  const toaNhaQuery = useToaNhaQuery();
+  const dichVuQuery = useDichVuQuery();
+  const userQuery = useUserQuery();
 
   useEffect(()=>{
-    if (loaiCanHoQuery.data)
-      setLoaiCanHo(loaiCanHoQuery.data);
-  },[loaiCanHoQuery.data])
+    if (dichVuQuery.data)
+      setDichVu(dichVuQuery.data);
+  },[dichVuQuery.data])
 
   useEffect(()=>{
     if (canHoQuery.data)
@@ -44,13 +47,13 @@ const AddHouse = () => {
   },[canHoQuery.data])
 
   useEffect(()=>{
-    if (toaNhaQuery.data)
-      setToaNha(toaNhaQuery.data);
-  },[toaNhaQuery.data])
+    if (userQuery.data)
+      setUser(userQuery.data);
+  },[userQuery.data])
 
   const add = useMutation({
-    mutationFn: () => apiCall('add_house', canHoDetail),
-    onSettled: () => addCanHoQuery.refetch()
+    mutationFn: () => apiCall('add_hopdong', hopDongDetail),
+    onSettled: () => addHopDongQuery.refetch()
   })
 
 
@@ -61,19 +64,19 @@ const AddHouse = () => {
 
   
 
-  const addHouse = async () => {
+  const addHopdong = async () => {
     
     try{
-      if (!canHoDetail.tenCanHo || !canHoDetail.loaiCanHoId || !canHoDetail.toaNhaId) {
+      if (!hopDongDetail.ngayDangKy || !hopDongDetail.canHoId || !hopDongDetail.dichVuId || hopDongDetail.userId) {
         messageApi.open({
           type: 'warning',
           content: 'Vui lòng nhập đầy đủ thông tin!',
           duration: 10,
         });
       }
-      const exists = canHoQuery.data.some(canho =>
-        canho.tenCanHo === canHoDetail.tenCanHo &&
-        canho.toaNhaId === canHoDetail.toaNhaId
+      const exists = hopDongQuery.data.some(hopdong =>
+        hopdong.ngayDangKy === hopDongDetail.ngayDangKy &&
+        hopdong.dichVuId === hopDongDetail.dichVuId
       );
       if (!exists) {
         await add.mutateAsync();
@@ -86,7 +89,7 @@ const AddHouse = () => {
       } else {
         messageApi.open({
           type: 'error',
-          content: 'Căn hộ đã tồn tại trong cơ sở dữ liệu!',
+          content: 'Căn hộ đã được đăng ký dịch vụ này!',
           duration: 10,
         });
       }
@@ -108,12 +111,20 @@ const AddHouse = () => {
     >
       <Row>
       <Form.Item 
-        label="Tên căn hộ"
+        label="Ngày đăng ký"
         style={{padding:5, width:'100%'}} 
       >
-        <Input placeholder="Tên căn hộ"
-          value={canHoDetail.tenCanHo}
-          onChange={(e)=> setCanHoDetail({...canHoDetail, tenCanHo: e.target.value})} />
+        <Input placeholder="Ngày đăng ký"
+          value={hopDongDetail.tenCanHo}
+          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngayDangKy: e.target.value})} />
+      </Form.Item>
+      <Form.Item 
+        label="Ngày hết hạn"
+        style={{padding:5, width:'100%'}} 
+      >
+        <Input placeholder="Ngày hết hạn"
+          value={hopDongDetail.tenCanHo}
+          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngayHetHan: e.target.value})} />
       </Form.Item>
       <Col span={12}>
       <Form.Item
@@ -164,4 +175,4 @@ const AddHouse = () => {
     
   );
 };
-export default AddHouse;
+export default AddHopDong;

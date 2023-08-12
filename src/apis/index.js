@@ -35,9 +35,9 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     console.log(`[API] ${error.config?.method} ${error.config?.url} [${error.response?.status}]`);
-
     if (error.response && error.response.status === 401) {
       store.dispatch({type: '@auth/LOGOUT'});
+
     }
 
     return Promise.reject(error);
@@ -79,9 +79,9 @@ export async function apiCall(key, data, config) {
     case 'POST':
       return _post(endpoint, data, config);
     case 'PUT':
-      return _put(endpoint, data, config);
+      return _put(`${endpoint}${data.id ? `/${data.id}` : ''}`, data, config);
     case 'DELETE':
-      return _delete(endpoint, config);
+      return _delete(`${endpoint}${data.id ? `/${data.id}` : ''}`, config);
     default:
       return _get(endpoint, config);
   }

@@ -12,6 +12,13 @@ import themes from 'themes';
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
 
+import {
+  QueryClient,
+  QueryClientProvider
+} from 'react-query'
+
+const queryClient = new QueryClient()
+
 // ==============================|| APP ||============================== //
 
 const App = () => {
@@ -20,10 +27,12 @@ const App = () => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={themes(customization)}>
+      <QueryClientProvider client={queryClient}>
         <CssBaseline />
         <NavigationScroll>
           <Routes />
         </NavigationScroll>
+        </QueryClientProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   );

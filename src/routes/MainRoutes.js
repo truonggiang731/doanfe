@@ -7,6 +7,9 @@ import {Navigate} from 'react-router';
 import AddHouse from 'ui-component/ManageHouse/AddHouse';
 import DeleteHouse from 'ui-component/ManageHouse/DeleteHouse';
 import UpdateHouse from 'ui-component/ManageHouse/UpdateHouse';
+import AddDichVu from 'ui-component/ManagerDichVu/AddDichVu';
+import DeleteDichVu from 'ui-component/ManagerDichVu/DeleteDichVu';
+import UpdateDichVu from 'ui-component/ManagerDichVu/UpdateDichVu';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -41,14 +44,25 @@ const MainRoutes = (isAuth) => {return {
     },
     {
           path: 'manage/add',
-          element: <AddHouse />
+          element: isAuth ? <AddHouse /> : <Navigate to="/login" />
     },
     {
           path: 'manage/delete',
-          element: <DeleteHouse />
+          element: isAuth ? <DeleteHouse /> : <Navigate to="/login" />
     },{
           path: 'manage/update',
-          element: <UpdateHouse />
+          element: isAuth ? <UpdateHouse /> : <Navigate to="/login" />
+    },
+    {
+          path: 'manageDV/add',
+          element: isAuth ? <AddDichVu /> : <Navigate to="/login" />
+    },
+    {
+          path: 'manageDV/delete',
+          element: isAuth ? <DeleteDichVu /> : <Navigate to="/login" />
+    },{
+          path: 'manageDV/update',
+          element: isAuth ? <UpdateDichVu /> : <Navigate to="/login"/>
     },
     {
       path: 'utils',

@@ -42,6 +42,38 @@ const other = {
         },
       ]
     },
+    {
+      id: 'manageDV',
+      title: 'Quản lý dịch vụ',
+      type: 'collapse',
+      // url: '/manage',
+      icon: icons.IconBuildingWarehouse,
+      // breadcrumbs: false,
+      target: true,
+      children: [
+        {
+          id: 'addHouse',
+          title: 'Thêm dịch vụ',
+          type: 'item',
+          url: '/manageDV/add',
+          target: false
+        },
+        {
+          id: 'deletehouse',
+          title: 'Xóa dịch vụ',
+          type: 'item',
+          url: '/manageDV/delete',
+          target: false
+        },
+        {
+          id: 'updatehouse',
+          title: 'Sửa dịch vụ',
+          type: 'item',
+          url: '/manageDV/update',
+          target: false
+        },
+      ]
+    },
 
   ]
 };
