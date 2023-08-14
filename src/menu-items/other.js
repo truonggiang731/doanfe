@@ -1,15 +1,17 @@
 // assets
 import { IconBuildingWarehouse, IconBrandChrome, IconHelp } from '@tabler/icons';
+import { store } from 'store';
 
 // constant
 const icons = { IconBrandChrome,IconBuildingWarehouse, IconHelp };
+const isAdmin = store.getState().auth.isAdmin;
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
 const other = {
   id: 'sample-docs-roadmap',
   type: 'group',
-  children: [
+  children: isAdmin ? [
     {
       id: 'manage',
       title: 'Quản lý căn hộ',
@@ -74,7 +76,33 @@ const other = {
         },
       ]
     },
-
+  ]
+  :
+  [
+    {
+      id: 'services',
+      title: 'Dịch vụ',
+      type: 'collapse',
+      icon: icons.IconBuildingWarehouse,
+      // breadcrumbs: false,
+      target: true,
+      children: [
+        {
+          id: 'deletehouse',
+          title: 'Quản lý dịch vụ',
+          type: 'item',
+          url: '/services',
+          target: false
+        },
+        {
+          id: 'addService',
+          title: 'Đăng ký dịch vụ',
+          type: 'item',
+          url: '/services/add',
+          target: false
+        }
+      ]
+    }
   ]
 };
 

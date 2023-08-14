@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 
 export const initialState = {
   isLogin: Cookies.get('token') ? true : false,
+  isAdmin: false
 };
 
 const authReducer = (state = initialState, action) => {
@@ -11,7 +12,8 @@ const authReducer = (state = initialState, action) => {
       Cookies.set('token', action.payload.token);
       return {
         ...state,
-        isLogin: true
+        isLogin: true,
+        isAdmin: action.payload.roles.includes('ROLE_ADMIN')
       };
     case actionTypes.LOGOUT:
       Cookies.remove('token');

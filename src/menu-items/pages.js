@@ -1,5 +1,6 @@
 // assets
 import { IconKey } from '@tabler/icons';
+import { store } from 'store';
 
 // constant
 const icons = {
@@ -7,6 +8,9 @@ const icons = {
 };
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
+
+
+const isAdmin = store.getState().auth.isAdmin;
 
 const pages = {
   id: 'pages',

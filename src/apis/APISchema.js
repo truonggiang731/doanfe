@@ -19,7 +19,7 @@ export const APISchema = {
     method: 'GET',
     endpoint: '/toanha'
   },
-  add_house: {
+  add_canho: {
     method: 'POST',
     endpoint: '/canho'
   },
