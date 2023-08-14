@@ -1,114 +1,69 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Table, Button, Modal, Row, Input, Col, Select, message } from 'antd';
+import { Button, Form, Table, message  } from 'antd';
 import { apiCall } from 'apis';
-import useLoaiDichVuQuery from 'hooks/useLoaiDichVuQuery';
 import useDichVuQuery from 'hooks/useDichVuQuery';
 import { useMutation } from 'react-query';
 import { useMemo } from 'react';
 import useCanHoQuery from 'hooks/useCanHoQuery';
+import useUserHopDongQuery from 'hooks/useUserHopDongQuery';
 
 function UserDichVu() {
   const [dichVu, setDichVu] = useState([])
-  const [form] = Form.useForm();
-  const [loaiDichVu, setLoaiDichVu] = useState([])
   const [hopDong, setHopDong] = useState([])
-
-  const [dichVuDetail, setDichVuDetail] = useState({
-    id: 0,
-    tenDichVu: '',
-    loaiDichVuId: 0,
-    donGia: 0,
-    trangThai: 'Chưa được sử dụng'
-  })
-
-  const dichVuQuery = useDichVuQuery();
-  const canHoQuery = useCanHoQuery();
+  const [canHo, setCanHo] = useState([])
 
   const [messageApi, com] = message.useMessage();
 
-  //API
+  const [hopDongDetail, setHopDongDetail] = useState({
+    id: 0
+  });
+
+  const dichVuQuery = useDichVuQuery();
+  const canHoQuery = useCanHoQuery();
+  const userHopDongQuery = useUserHopDongQuery();
+
   useEffect(()=>{
     if (dichVuQuery.data)
       setDichVu(dichVuQuery.data);
   },[dichVuQuery.data])
 
-  const update = useMutation({
-    mutationFn: () => apiCall('update_dichvu', dichVuDetail),
-    onSettled: () => dichVuQuery.refetch()
-  })
+  useEffect(()=>{
+    if (canHoQuery.data)
+      setCanHo(canHoQuery.data);
+  },[canHoQuery.data])
+
+  useEffect(()=>{
+    if (userHopDongQuery.data)
+      setHopDong(userHopDongQuery.data);
+  },[userHopDongQuery.data])
 
   const remove = useMutation({
-    mutationFn: () => apiCall('delete_dichvu', dichVuDetail),
+    mutationFn: () => apiCall('delete_hopdong', hopDongDetail),
     onSettled: () => dichVuQuery.refetch()
   })
 
-  const updateDichVu = async () => {
-    try{
-      if (!dichVuDetail.tenDichVu || !dichVuDetail.loaiDichVuId) {
-        messageApi.open({
-          type: 'warning',
-          content: 'Vui lòng nhập đầy đủ thông tin!',
-          duration: 10,
-        });
-        console.log("lỗi không có dữ liệu")
-      }
-  
-      const exists = dichVu.some(dichvu =>
-        dichvu.id !== dichVuDetail.id &&
-        dichvu.tenDichVu === dichVuDetail.tenDichVu &&
-        dichvu.loaiDichVuId === dichVuDetail.loaiDichVuId
-      );
-    
-      if (!exists) {
-        await update.mutateAsync();
-        console.log("ok");
-      messageApi.open({
-        type: 'success',
-        content: 'cập nhật thành công!',
-        duration: 10,
-      });
-      // getCanHo();
-      // updateData();
-      form.resetFields();
-    }else {
-      // messageApi.open({
-      //   type: 'error',
-      //   content: 'Căn hộ đã tồn tại trong cơ sở dữ liệu!',
-      //   duration: 10,
-      // });
-      console.log("lỗi dữ liệu")
-    }
-    } catch(err){
-      // messageApi.open({
-      //   type: 'error',
-      //   content: 'cập nhật thất bại!',
-      //   duration: 10,
-      // });
-      console.log(err);
-    }
-  }
-
   const data = useMemo(() => {
-    const data = dichVu.map((x, i) => {return {
+    const data = hopDong.map((x, i) => {return {
       ...x,
       key: i,
-      loaiDichVuId: loaiDichVu.find(y => y.id === x.loaiDichVuId).name,
+      tenDichVu: dichVu.find(y => y.id === x.dichVuId).name,
+      tenCanHo: canHo.find(y => y.id === x.canHoId).name
     }});
   
     return data;
-  }, [dichVu, loaiDichVu])
+  }, [dichVu, canHo, hopDong])
 const columns = [
   {
-    title: 'Tên dịch vụ',
-    dataIndex: 'tenDichVu',
+    title: 'Ngày đăng ký',
+    dataIndex: 'ngaydangky',
   },
   {
-    title: 'Loại dịch vụ',
-    dataIndex: 'loaiDichVuId',
+    title: 'Ngày hết hạn',
+    dataIndex: 'ngayhethan',
   },
   {
-    title: 'Đơn Giá',
-    dataIndex: 'donGia',
+    title: 'Tên căn hộ',
+    dataIndex: 'tenCanHo',
   },
   {
     title: 'Trạng thái',
@@ -120,12 +75,7 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
     const selectedId = newSelectedRowKeys.length === 1 ? newSelectedRowKeys[0] : '';
-    setDichVuDetail(dichVu.find(x => x.id === data[selectedId].id) || {
-      id: 0,
-      tenDichVu: '',
-      loaiDichVuId: 0,
-      donGia: 0
-    });
+    setHopDongDetail(hopDong.find(x => x.id === data[selectedId].id) || {id: 0})
     console.log(selectedRowKeys);
   };
   const rowSelection = {
@@ -174,104 +124,23 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
     }  
   }
 
-  //MODAL
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-  const showModal = () => {
-    setOpen(true);
-  };
-  const handleOk = async () => {
-    console.log(dichVuDetail);
-    setLoading(true);
-    await updateDichVu();
-    setLoading(false);
-    setOpen(false);
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
-  };
-
-  if (dichVuQuery.isLoading || loaiDichVu.isLoading ) {
+  if (dichVuQuery.isLoading || canHoQuery.isLoading || userHopDongQuery.isLoading ) {
     return null;
   }
 
-  //MODAL
-
   return (
-<div>
+    <div>
       {com}
       <Form>
         <Form.Item>
-        <Table rowSelection={rowSelection} columns={columns} dataSource={data} />;
+        <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
         </Form.Item>
       <Form.Item>
         <Button type="primary" onClick={handleSubmit}>Xóa</Button>
       </Form.Item>
       <Form.Item>
-      <Button type="primary" onClick={showModal}>
-        Sửa
-      </Button>
-      <Modal
-        open={open}
-        title="Title"
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            Return
-          </Button>,
-          <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
-            Submit
-          </Button>,
-        ]}
-      >
-        <Form
-        form={form}
-        layout="vertical"
-    >
-      <Row>
-      <Form.Item 
-        label="Tên dịch vụ"
-        style={{padding:5, width:'100%'}} 
-      >
-        <Input
-          placeholder="Tên dịch vụ"
-          value={dichVuDetail.tenDichVu}
-          onChange={(e)=> setDichVuDetail({...dichVuDetail, tenDichVu: e.target.value})} />
-      </Form.Item>
-      <Col span={12}>
-      <Form.Item
-          label="Loại dịch vụ"
-        >
-          <Select
-          //defaultValue="lucy"
-          style={{ padding:5}}
-          value={dichVuDetail.loaiDichVuId}
-          onChange={(value) => setDichVuDetail({...dichVuDetail, loaiDichVuId: value})}
-          options={loaiDichVu.map((option)=>({
-            value: option.id,
-            label: option.name,
-          })
-          ) } 
-        />
-      </Form.Item>
-      </Col>
-      <Form.Item 
-        label="Đơn giá"
-        style={{padding:5, width:'100%'}} 
-      >
-        <Input
-          placeholder="Đơn giá"
-          value={dichVuDetail.donGia}
-          onChange={(e)=> setDichVuDetail({...dichVuDetail, donGia: e.target.value})} />
-      </Form.Item>
-    </Row>
-    </Form>
-      </Modal>
       </Form.Item>
       </Form>
-       
     </div>
   )
 }

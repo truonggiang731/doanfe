@@ -70,6 +70,14 @@ export const APISchema = {
   get_all_hopdong: {
     method: 'GET',
     endpoint: '/hopdong'
+  },
+  user_hopdong: {
+    method: 'GET',
+    endpoint: '/hopdong/user'
+  },
+  user_hopdong: {
+    method: 'DELETE',
+    endpoint: '/hopdong'
   }
 };
 

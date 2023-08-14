@@ -5,6 +5,7 @@ import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import {Navigate} from 'react-router';
 import UserDichVu from 'ui-component/UserDichVu';
+import AddHopDong from 'ui-component/UserDichVu/AddHopDong';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -33,6 +34,10 @@ const UserRoutes = (isAuth) => {return {
     {
        path: 'services',
        element: isAuth ? <UserDichVu /> : <Navigate to="/login" />
+    },
+    {
+       path: 'services/add',
+       element: isAuth ? <AddHopDong /> : <Navigate to="/login" />
     },
     {
       path: '*',

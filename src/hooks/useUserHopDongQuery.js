@@ -1,7 +1,7 @@
 import { apiCall } from "apis";
 import {useQuery} from "react-query";
 
-export default function useHopDongQuery() {
+export default function useUserHopDongQuery() {
   const query = useQuery({
     queryKey: ['admin', 'hopdong'],
     queryFn: () => apiCall("user_hopdong"),
