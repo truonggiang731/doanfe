@@ -5,11 +5,13 @@ import useLoaiDichVuQuery from 'hooks/useLoaiDichVuQuery';
 import useDichVuQuery from 'hooks/useDichVuQuery';
 import { useMutation } from 'react-query';
 import { useMemo } from 'react';
+import useCanHoQuery from 'hooks/useCanHoQuery';
 
 function UserDichVu() {
   const [dichVu, setDichVu] = useState([])
   const [form] = Form.useForm();
   const [loaiDichVu, setLoaiDichVu] = useState([])
+  const [hopDong, setHopDong] = useState([])
 
   const [dichVuDetail, setDichVuDetail] = useState({
     id: 0,
@@ -19,21 +21,16 @@ function UserDichVu() {
     trangThai: 'Chưa được sử dụng'
   })
 
-  const loaiDichVuQuery = useLoaiDichVuQuery();
   const dichVuQuery = useDichVuQuery();
+  const canHoQuery = useCanHoQuery();
 
   const [messageApi, com] = message.useMessage();
-  //API
-  useEffect(()=>{
-    if (loaiDichVuQuery.data)
-      setLoaiDichVu(loaiDichVuQuery.data);
-  },[loaiDichVuQuery.data])
 
+  //API
   useEffect(()=>{
     if (dichVuQuery.data)
       setDichVu(dichVuQuery.data);
   },[dichVuQuery.data])
-
 
   const update = useMutation({
     mutationFn: () => apiCall('update_dichvu', dichVuDetail),

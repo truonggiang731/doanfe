@@ -23,18 +23,33 @@ const queryClient = new QueryClient()
 
 const App = () => {
   const customization = useSelector((state) => state.customization);
+  const {isAdmin} = useSelector((state) => state.auth);
+
+  console.log(`render with ${isAdmin}`)
 
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={themes(customization)}>
-      <QueryClientProvider client={queryClient}>
-        <CssBaseline />
-        <NavigationScroll>
-          <Routes />
-        </NavigationScroll>
-        </QueryClientProvider>
-      </ThemeProvider>
-    </StyledEngineProvider>
+    isAdmin ?
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={themes(customization)}>
+        <QueryClientProvider client={queryClient}>
+          <CssBaseline />
+          <NavigationScroll>
+            <Routes />
+          </NavigationScroll>
+          </QueryClientProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    :
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={themes(customization)}>
+        <QueryClientProvider client={queryClient}>
+          <CssBaseline />
+          <NavigationScroll>
+            <Routes />
+          </NavigationScroll>
+          </QueryClientProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
   );
 };
 
