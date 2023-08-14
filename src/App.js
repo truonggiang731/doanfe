@@ -16,6 +16,7 @@ import {
   QueryClient,
   QueryClientProvider
 } from 'react-query'
+import {useEffect} from 'react';
 
 const queryClient = new QueryClient()
 
@@ -24,8 +25,6 @@ const queryClient = new QueryClient()
 const App = () => {
   const customization = useSelector((state) => state.customization);
   const {isAdmin} = useSelector((state) => state.auth);
-
-  console.log(`render with ${isAdmin}`)
 
   return (
     isAdmin ?
