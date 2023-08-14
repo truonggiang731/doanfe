@@ -6,6 +6,8 @@ export const initialState = {
   isAdmin: JSON.parse(Cookies.get('roles') || '[]').includes("ROLE_ADMIN")
 };
 
+
+
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.LOGIN:

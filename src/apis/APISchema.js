@@ -75,9 +75,13 @@ export const APISchema = {
     method: 'GET',
     endpoint: '/hopdong/user'
   },
-  user_hopdong: {
+  duser_hopdong: {
     method: 'DELETE',
     endpoint: '/hopdong'
+  },
+  unpaid_hoadon: {
+    method: 'GET',
+    endpoint: '/hoadon/unpaid'
   }
 };
 

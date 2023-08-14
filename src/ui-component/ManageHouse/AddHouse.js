@@ -26,6 +26,8 @@ const AddHouse = () => {
     toaNhaId: 0,
     loaiCanHoId: 0,
     ghiChu: ''
+
+  
   })
 
   const addCanHoQuery = useAddCanHoQuery();
@@ -49,9 +51,32 @@ const AddHouse = () => {
   },[toaNhaQuery.data])
 
   const add = useMutation({
-    mutationFn: () => apiCall('add_house', canHoDetail),
+    mutationFn: () => apiCall('add_canho', canHoDetail),
     onSettled: () => addCanHoQuery.refetch()
   })
+
+  const addCanHo = async()=>{
+    try {
+      const res = await apiCall('add_canho', canHoDetail);
+      //console.log(res);
+    }catch(err){
+      console.log(err)
+    }
+  }
+  const getCanHo = async()=>{
+    try {
+      const res = await apiCall('get_all_canho');
+      setCanHo(res);
+      //console.log(res);
+    }catch(err){
+      console.log(err)
+    }
+  }
+ console.log(canHo);
+ useEffect(()=>{
+  getCanHo();
+},[])
+
 
 
 
@@ -64,6 +89,7 @@ const AddHouse = () => {
   const addHouse = async () => {
     
     try{
+      console.log(canHoDetail)
       if (!canHoDetail.tenCanHo || !canHoDetail.loaiCanHoId || !canHoDetail.toaNhaId) {
         messageApi.open({
           type: 'warning',
@@ -71,12 +97,12 @@ const AddHouse = () => {
           duration: 10,
         });
       }
-      const exists = canHoQuery.data.some(canho =>
+      const exists = canHo.some(canho =>
         canho.tenCanHo === canHoDetail.tenCanHo &&
         canho.toaNhaId === canHoDetail.toaNhaId
       );
       if (!exists) {
-        await add.mutateAsync();
+        addCanHo();
         console.log("ok");
       messageApi.open({
         type: 'success',
@@ -90,8 +116,8 @@ const AddHouse = () => {
           duration: 10,
         });
       }
-    } catch{
-      console.log("khong add duoc can ho")
+    } catch(err){
+      console.log(err)
     }
 
   }

@@ -30,18 +30,12 @@ const other = {
         },
         {
           id: 'deletehouse',
-          title: 'Xóa căn hộ',
+          title: 'Danh sách căn hộ',
           type: 'item',
           url: '/manage/delete',
           target: false
         },
-        {
-          id: 'updatehouse',
-          title: 'Sửa căn hộ',
-          type: 'item',
-          url: '/manage/update',
-          target: false
-        },
+        
       ]
     },
     {
@@ -62,18 +56,38 @@ const other = {
         },
         {
           id: 'deletehouse',
-          title: 'Xóa dịch vụ',
+          title: 'Danh sách dịch vụ',
           type: 'item',
           url: '/manageDV/delete',
           target: false
         },
+        
+      ]
+    },
+    {
+      id: 'manageHD',
+      title: 'Quản lý hợp đồng',
+      type: 'collapse',
+      // url: '/manage',
+      icon: icons.IconBuildingWarehouse,
+      // breadcrumbs: false,
+      target: true,
+      children: [
         {
-          id: 'updatehouse',
-          title: 'Sửa dịch vụ',
+          id: 'addHopdong',
+          title: 'Thêm hợp đồng',
           type: 'item',
-          url: '/manageDV/update',
+          url: '/manageHD/add',
           target: false
         },
+        {
+          id: 'deletehouse',
+          title: 'Danh sách hợp đồng',
+          type: 'item',
+          url: '/manageDV/delete',
+          target: false
+        },
+        
       ]
     },
   ]
@@ -99,6 +113,13 @@ const other = {
           title: 'Đăng ký dịch vụ',
           type: 'item',
           url: '/services/add',
+          target: false
+        },
+        {
+          id: 'unpaidService',
+          title: 'Hóa đơn chưa trả',
+          type: 'item',
+          url: '/services/unpaid',
           target: false
         }
       ]

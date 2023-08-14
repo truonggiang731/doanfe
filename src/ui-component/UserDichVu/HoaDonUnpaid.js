@@ -8,7 +8,7 @@ import useCanHoQuery from 'hooks/useCanHoQuery';
 import useUserHopDongQuery from 'hooks/useUserHopDongQuery';
 import useUnpaidHoaDonQuery from 'hooks/useUnpaidHoaDonQuery';
 
-function UserDichVu() {
+function HoaDonUnpaid() {
   const [dichVu, setDichVu] = useState([])
   const [hopDong, setHopDong] = useState([])
   const [canHo, setCanHo] = useState([])
@@ -24,6 +24,23 @@ function UserDichVu() {
   const canHoQuery = useCanHoQuery();
   const userHopDongQuery = useUserHopDongQuery();
   const unpaidHoaDonQuery = useUnpaidHoaDonQuery();
+  
+  
+  const getHoaDon = async()=>{
+    try {
+      const res = await apiCall('unpaid_hoadon');
+      setHoaDon(res);
+      //console.log(res);
+    }catch(err){
+      console.log(err)
+    }
+  }
+ console.log(hoaDon);
+ useEffect(()=>{
+  getHoaDon();
+},[])
+
+
 
   useEffect(()=>{
     if (dichVuQuery.data)
@@ -39,10 +56,10 @@ function UserDichVu() {
     if (userHopDongQuery.data)
       setHopDong(userHopDongQuery.data);
   },[userHopDongQuery.data])
-  useEffect(()=>{
-    if (userHopDongQuery.data)
-      setHopDong(userHopDongQuery.data);
-  },[userHopDongQuery.data])
+//   useEffect(()=>{
+//     if (unpaidHoaDonQuery.data)
+//       setHoaDon(unpaidHoaDonQuery.data);
+//   },[unpaidHoaDonQuery.data])
 
   const remove = useMutation({
     mutationFn: () => apiCall('delete_hopdong', hopDongDetail),
@@ -50,33 +67,48 @@ function UserDichVu() {
   })
 
   const data = useMemo(() => {
-    const data = hopDong.map((x, i) => {return {
-      ...x,
-      key: i,
-      tenDichVu: dichVu.find(y => y.id === x.dichVuId).name,
-      tenCanHo: canHo.find(y => y.id === x.canHoId).name
-    }});
+    const data = hoaDon.map((x, i) => {
+      const foundHopDong = hopDong.find(y => y.id === x.hopDongId);
+      const foundDichVu = foundHopDong ? dichVu.find(z => z.id === foundHopDong.dichVuId) : null;
+      const foundCanHo = foundHopDong ? canHo.find(z => z.id === foundHopDong.canHoId) : null;
+      return {
+        ...x,
+        key: i,
+        tenDichVu: foundDichVu ? foundDichVu.name : 'N/A',
+        tenCanHo: foundCanHo ? foundCanHo.name : 'N/A'
+      };
+    });
   
     return data;
   }, [dichVu, canHo, hopDong])
-const columns = [
-  {
-    title: 'Ngày đăng ký',
-    dataIndex: 'ngaydangky',
-  },
-  {
-    title: 'Ngày hết hạn',
-    dataIndex: 'ngayhethan',
-  },
-  {
-    title: 'Tên căn hộ',
-    dataIndex: 'tenCanHo',
-  },
-  {
-    title: 'Trạng thái',
-    dataIndex: 'trangThai',
-  },
+  const columns = [
+    {
+      title: 'Ngày lập',
+      dataIndex: 'ngayLap',
+    },
+    {
+      title: 'Ngày thanh toán',
+      dataIndex: 'ngayThanhToan',
+    },
+    {
+      title: 'Tổng tiền',
+      dataIndex: 'tongTien',
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'trangThai',
+    },
+    {
+      title: 'Tên dịch vụ',
+      dataIndex: 'tenDichVu',
+    },
+    {
+      title: 'Tên căn hộ',
+      dataIndex: 'tenCanHo',
+    },
 ];
+console.log(data)
+console.log(hoaDon)
 const [selectedRowKeys, setSelectedRowKeys] = useState('');
   const onSelectChange = (newSelectedRowKeys) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
@@ -151,4 +183,4 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
     </div>
   )
 }
-export default UserDichVu;
+export default HoaDonUnpaid;

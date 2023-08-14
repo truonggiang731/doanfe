@@ -6,6 +6,7 @@ import Loadable from 'ui-component/Loadable';
 import {Navigate} from 'react-router';
 import UserDichVu from 'ui-component/UserDichVu';
 import AddHopDong from 'ui-component/UserDichVu/AddHopDong';
+import HoaDonUnpaid from 'ui-component/UserDichVu/HoaDonUnpaid';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -38,11 +39,14 @@ const UserRoutes = (isAuth) => {return {
     {
        path: 'services/add',
        element: isAuth ? <AddHopDong /> : <Navigate to="/login" />
-    },
-    {
-      path: '*',
-      element: <p>404</p>
-    }
+    },{
+      path: 'services/unpaid',
+      element: isAuth ? <HoaDonUnpaid /> : <Navigate to="/login" />
+   },
+   {
+     path: '*',
+     element: <p>404</p>
+   }
   ]
 }};
 

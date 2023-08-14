@@ -23,11 +23,11 @@ const AddHopDong = () => {
   const [messageApi, com] = message.useMessage();
 
   const [hopDongDetail, setHopDongDetail] = useState({
-    ngayDangKy: '',
-    ngayHetHan: '',
-    userId: 0,
-    CanHoId: 0,
+    ngaydangky: new Date(),
+    ngayhethan: new Date(),
+    canHoId: 0,
     dichVuId: 0,
+    userId: 0
   })
 
   const addHopDongQuery = useAddHopDongQuery();
@@ -73,26 +73,30 @@ const AddHopDong = () => {
           content: 'Vui lòng nhập đầy đủ thông tin!',
           duration: 10,
         });
-      }
-      const exists = hopDongQuery.data.some(hopdong =>
-        hopdong.ngayDangKy === hopDongDetail.ngayDangKy &&
-        hopdong.dichVuId === hopDongDetail.dichVuId
-      );
-      if (!exists) {
-        await add.mutateAsync();
-        console.log("ok");
-      messageApi.open({
-        type: 'success',
-        content: 'cập nhật thành công!',
-        duration: 10,
-      });
-      } else {
+      }else{
+        const exists = hopDongQuery.data.some(hopdong =>
+          hopdong.ngayDangKy === hopDongDetail.ngayDangKy &&
+          hopdong.canHoId === hopDongDetail.canHoId &&
+          hopdong.userId === hopDongDetail.userId&&
+          hopdong.dichVuId === hopDongDetail.dichVuId
+        );
+        if (!exists) {
+          await add.mutateAsync();
+          console.log("ok");
         messageApi.open({
-          type: 'error',
-          content: 'Căn hộ đã được đăng ký dịch vụ này!',
+          type: 'success',
+          content: 'cập nhật thành công!',
           duration: 10,
         });
+        } else {
+          messageApi.open({
+            type: 'error',
+            content: 'Căn hộ đã được đăng ký dịch vụ này!',
+            duration: 10,
+          });
+        }
       }
+      
     } catch{
       console.log("khong add duoc can ho")
     }
@@ -115,27 +119,29 @@ const AddHopDong = () => {
         style={{padding:5, width:'100%'}} 
       >
         <Input placeholder="Ngày đăng ký"
-          value={hopDongDetail.tenCanHo}
-          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngayDangKy: e.target.value})} />
+          value={hopDongDetail.ngaydangky.toISOString().slice(0, 10)}
+          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngaydangky: new Date(e.target.value)})}
+          type="date"/>
       </Form.Item>
       <Form.Item 
         label="Ngày hết hạn"
         style={{padding:5, width:'100%'}} 
       >
         <Input placeholder="Ngày hết hạn"
-          value={hopDongDetail.tenCanHo}
-          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngayHetHan: e.target.value})} />
+          value={new Date(hopDongDetail.ngayhethan)}
+          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngayhethan: new Date(e.target.value)})}
+          type="date"/>
       </Form.Item>
       <Col span={12}>
       <Form.Item
-          label="Tòa nhà"
+          label="Người đăng ký"
         >
           <Select
           //defaultValue="lucy"
           style={{ padding:5}}
-          value={canHoDetail.toaNhaId}
-          onChange={(value) => setCanHoDetail({...canHoDetail, toaNhaId: value})}
-          options={toaNha.map((option)=>({
+          value={hopDongDetail.userId}
+          onChange={(value) => setHopDongDetail({...hopDongDetail, userId: value})}
+          options={user.map((option)=>({
             value: option.id,
             label: option.name,
           })
@@ -145,30 +151,40 @@ const AddHopDong = () => {
       </Col>
       <Col span={12}>
         <Form.Item
-          label="Loại căn hộ"
+          label="Căn hộ"
         >
           <Select
           //defaultValue="lucy"
           style={{ width: '100%',padding:5}}
-          onChange={(value) => setCanHoDetail({...canHoDetail, loaiCanHoId: value})}
-          value={canHoDetail.loaiCanHoId}
-          options={loaiCanHo.map((option)=>({
+          onChange={(value) => setHopDongDetail({...hopDongDetail, canHoId: value})}
+          value={hopDongDetail.loaiCanHoId}
+          options={canHo.map((option)=>({
             value: option.id,
-            label: option.name,
+            label: option.tenCanHo,
           })) } 
         />
       </Form.Item>
     </Col>
-    <Form.Item
-        label="Ghi chú"
-        style={{width:'100%'}}
-      >
-        <TextArea showCount maxLength={100} value={canHoDetail.ghiChu} onChange={(e)=> setCanHoDetail({...canHoDetail, ghiChu: e.target.value})} />
+    <Col span={12}>
+        <Form.Item
+          label="Dịch vụ"
+        >
+          <Select
+          //defaultValue="lucy"
+          style={{ width: '100%',padding:5}}
+          onChange={(value) => setHopDongDetail({...hopDongDetail, dichVuId: value})}
+          value={hopDongDetail.dichVuId}
+          options={dichVu.map((option)=>({
+            value: option.id,
+            label: option.tenDichVu,
+          })) } 
+        />
       </Form.Item>
+    </Col>
     </Row>
       <Form.Item>
         
-        <Button type="primary" onClick={addHouse}>Gửi</Button>
+        <Button type="primary" onClick={addHopdong}>Gửi</Button>
       </Form.Item>
     </Form>
     </div>

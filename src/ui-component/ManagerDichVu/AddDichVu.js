@@ -55,8 +55,8 @@ const addDichVu = async () => {
       });
     }
     const exists = dichvu.some(dichVu =>
-      dichVu.tenCanHo === dichVuDetail.tenCanHo &&
-      dichVu.toaNhaId === dichVuDetail.toaNhaId
+      dichVu.tenDichVu === dichVuDetail.tenDichVu &&
+      dichVu.loaiDichVuId === dichVuDetail.loaiDichVuId
     );
     if (!exists) {
       await add.mutateAsync();
@@ -69,7 +69,7 @@ const addDichVu = async () => {
     } else {
       messageApi.open({
         type: 'error',
-        content: 'Căn hộ đã tồn tại trong cơ sở dữ liệu!',
+        content: 'Dịch vụ đã tồn tại trong cơ sở dữ liệu!',
         duration: 10,
       });
     }

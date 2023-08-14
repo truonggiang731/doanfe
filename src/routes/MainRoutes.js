@@ -10,6 +10,8 @@ import UpdateHouse from 'ui-component/ManageHouse/UpdateHouse';
 import AddDichVu from 'ui-component/ManagerDichVu/AddDichVu';
 import DeleteDichVu from 'ui-component/ManagerDichVu/DeleteDichVu';
 import UpdateDichVu from 'ui-component/ManagerDichVu/UpdateDichVu';
+import AddHopDong from 'ui-component/UserDichVu/AddHopDong';
+import AddHoaDon from 'ui-component/ManagerHoaDon/AddHoaDon';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -63,7 +65,14 @@ const MainRoutes = (isAuth) => {return {
     },{
           path: 'manageDV/update',
           element: isAuth ? <UpdateDichVu /> : <Navigate to="/login"/>
+    },{
+      path: 'manageHD/add',
+      element: isAuth ? <AddHopDong /> : <Navigate to="/login"/>
+    },{
+      path: 'managehd/update',
+      element: isAuth ? <AddHoaDon /> : <Navigate to="/login"/>
     },
+    
     {
       path: 'utils',
       children: [
