@@ -147,7 +147,7 @@ const FirebaseLogin = ({ ...others }) => {
               usernameOrEmail: values.email,
               password: values.password
             });
-            dispatch({ type: '@auth/LOGIN', payload: { token: res.accessToken } });
+            dispatch({ type: '@auth/LOGIN', payload: { token: res.accessToken, roles: res.roles } });
             if (scriptedRef.current) {
               setStatus({ success: true });
               setSubmitting(false);
