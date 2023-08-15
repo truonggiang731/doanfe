@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Select, Col, Row, message  } from 'antd';
+import { Button, Form, Input, Select, Col, Row, message, DatePicker  } from 'antd';
 import { apiCall } from 'apis';
 import useCanHoQuery from 'hooks/useCanHoQuery';
 import useAddCanHoQuery from 'hooks/UseAddCanHoQuery';
@@ -10,9 +10,13 @@ import useDichVuQuery from 'hooks/useDichVuQuery';
 import useUserQuery from 'hooks/useUserQuery';
 import useAddHopDongQuery from 'hooks/useAddHopDongQuery';
 import useHopDongQuery from 'hooks/useHopDongQuery';
-const { TextArea } = Input;
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+const dateFormat = 'YYYY/MM/DD';
 
-const AddHopDong = () => {
+const AddHopDongAdmin = () => {
+  const customFormat = (value) => `custom format: ${value.format(dateFormat)}`;
   const [form] = Form.useForm();
   const [requiredMark, setRequiredMarkType] = useState('optional');
   const [hopDong, setHopDong] = useState([])
@@ -118,19 +122,17 @@ const AddHopDong = () => {
         label="Ngày đăng ký"
         style={{padding:5, width:'100%'}} 
       >
-        <Input placeholder="Ngày đăng ký"
-          value={hopDongDetail.ngaydangky.toISOString().slice(0, 10)}
-          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngaydangky: new Date(e.target.value)})}
-          type="date"/>
+          <DatePicker defaultValue={dayjs()} format={dateFormat}
+          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngaydangky: e.target.value})}
+          style={{width: '100%'}}  />
       </Form.Item>
       <Form.Item 
         label="Ngày hết hạn"
         style={{padding:5, width:'100%'}} 
       >
-        <Input placeholder="Ngày hết hạn"
-          value={new Date(hopDongDetail.ngayhethan)}
-          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngayhethan: new Date(e.target.value)})}
-          type="date"/>
+        <DatePicker defaultValue={dayjs()} format={dateFormat}
+          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngayhethan: e.target.value})}
+          style={{width: '100%'}}  />
       </Form.Item>
       <Col span={12}>
       <Form.Item
@@ -191,4 +193,4 @@ const AddHopDong = () => {
     
   );
 };
-export default AddHopDong;
+export default AddHopDongAdmin;

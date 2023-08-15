@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Select, Col, Row, message  } from 'antd';
+import { Button, Form, Input, Select, Col, Row, message, DatePicker  } from 'antd';
 import { apiCall } from 'apis';
 import useCanHoQuery from 'hooks/useCanHoQuery';
 import { useMutation } from 'react-query';
 import useDichVuQuery from 'hooks/useDichVuQuery';
 import useUserHopDongQuery from 'hooks/useUserHopDongQuery';
+
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+const dateFormat = 'YYYY/MM/DD';
+
 
 const AddHopDong = () => {
   const [form] = Form.useForm();
@@ -15,8 +21,8 @@ const AddHopDong = () => {
 
   const [hopDongDetail, setHopDongDetail] = useState({
     id: 0,
-    ngaydangky: new Date().toString(),
-    ngayhethan: new Date().toString(),
+    ngaydangky: new Date(),
+    ngayhethan: new Date(),
     canHoId: 0,
     dichVuId: 0
   });
@@ -78,19 +84,17 @@ const AddHopDong = () => {
         label="Ngày đăng ký"
         style={{padding:5, width:'100%'}} 
       >
-        <Input placeholder="Ngày đăng ký"
-          value={new Date(hopDongDetail.ngaydangky)}
-          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngaydangky: e.target.value.toString()})}
-          type="date"/>
+        <DatePicker defaultValue={dayjs()} format={dateFormat}
+          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngaydangky: e.target.value})}
+          style={{width: '100%'}}  />
       </Form.Item>
       <Form.Item 
         label="Ngày hết hạn"
         style={{padding:5, width:'100%'}} 
       >
-        <Input placeholder="Ngày hết hạn"
-          value={new Date(hopDongDetail.ngayhethan)}
+        <DatePicker defaultValue={dayjs()} format={dateFormat}
           onChange={(e)=> setHopDongDetail({...hopDongDetail, ngayhethan: e.target.value})}
-          type="date"/>
+          style={{width: '100%'}}  />
       </Form.Item>
       <Col span={12}>
       <Form.Item label="Dịch vụ">

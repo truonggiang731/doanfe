@@ -74,8 +74,9 @@ function HoaDonUnpaid() {
       return {
         ...x,
         key: i,
-        tenDichVu: foundDichVu ? foundDichVu.name : 'N/A',
-        tenCanHo: foundCanHo ? foundCanHo.name : 'N/A'
+        tenDichVu: foundDichVu ? foundDichVu.tenDichVu : 'N/A',
+        tenCanHo: foundCanHo ? foundCanHo.tenCanHo : 'N/A',
+        tongTien: foundDichVu? foundDichVu.donGia : 0,
       };
     });
   
