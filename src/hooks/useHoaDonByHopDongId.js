@@ -1,10 +1,10 @@
 import { apiCall } from "apis";
 import {useQuery} from "react-query";
 
-export default function useAddDichVuQuery() {
+export default function useHoaDonByHopDongQuery() {
   const query = useQuery({
-    queryKey: ['admin', 'addDichVu'],
-    queryFn: () => apiCall("add_dichvu"),
+    queryKey: ['admin', 'hoadon_hopdong'],
+    queryFn: () => apiCall("hoadon_hopdong"),
     cacheTime: Infinity,
     refetchOnWindowFocus: false,
     staleTime: Infinity

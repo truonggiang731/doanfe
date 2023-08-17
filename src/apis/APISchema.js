@@ -11,6 +11,10 @@ export const APISchema = {
     method: 'GET',
     endpoint: '/canho'
   },
+  get_all_hopdong: {
+    method: 'GET',
+    endpoint: '/hopdong'
+  },
   get_loaicanho: {
     method: 'GET',
     endpoint: '/loaicanho'
@@ -19,20 +23,24 @@ export const APISchema = {
     method: 'GET',
     endpoint: '/toanha'
   },
-  add_canho: {
-    method: 'POST',
-    endpoint: '/canho'
+  unpaid_hoadon: {
+    method: 'GET',
+    endpoint: '/hoadon/unpaid'
   },
-  delete_house:{
-    method: 'DELETE',
-    endpoint: '/canho'
+  canho_hopdong:{
+    method: 'GET',
+    endpoint: '/canho/{id}'
+  },
+  user_hopdong: {
+    method: 'GET',
+    endpoint: '/hopdong/user'
+  },
+  get_user: {
+    method: 'GET',
+    endpoint: '/user'
   },
   get_all_dichvu: {
     method: 'GET',
-    endpoint: '/dichvu'
-  },
-  add_dichvu: {
-    method: 'POST',
     endpoint: '/dichvu'
   },
   get_all_hoadon: {
@@ -43,13 +51,45 @@ export const APISchema = {
     method: 'GET',
     endpoint: '/loaidichvu'
   },
-  get_user: {
+  used_hopdong: {
     method: 'GET',
-    endpoint: '/user'
+    endpoint: '/hopdong/used'
+  },
+  hoadon_hopdong: {
+    method: 'GET',
+    endpoint: '/hoadon/hopdong'
+  },
+  add_adminhopdong: {
+    method: 'POST',
+    endpoint: '/hopdong/admin'
+  },
+  add_canho: {
+    method: 'POST',
+    endpoint: '/canho'
+  },
+  add_dichvu: {
+    method: 'POST',
+    endpoint: '/dichvu'
+  },
+  add_hoadon: {
+    method: 'POST',
+    endpoint: '/hoadon'
+  },
+  delete_hopdong:{
+    method: 'DELETE',
+    endpoint: '/hopdong'
   },
   delete_dichvu:{
     method: 'DELETE',
     endpoint: '/dichvu'
+  },
+  delete_house:{
+    method: 'DELETE',
+    endpoint: '/canho'
+  },
+  duser_hopdong: {
+    method: 'DELETE',
+    endpoint: '/hopdong'
   },
   update_house: {
     method: 'PUT',
@@ -59,29 +99,9 @@ export const APISchema = {
     method: 'PUT',
     endpoint: '/dichvu'
   },
-  get_user: {
-     method: 'GET',
-     endpoint: '/user'
-  },
-  add_hopdong: {
-    method: 'POST',
+  update_hopdong: {
+    method: 'PUT',
     endpoint: '/hopdong'
-  },
-  get_all_hopdong: {
-    method: 'GET',
-    endpoint: '/hopdong'
-  },
-  user_hopdong: {
-    method: 'GET',
-    endpoint: '/hopdong/user'
-  },
-  duser_hopdong: {
-    method: 'DELETE',
-    endpoint: '/hopdong'
-  },
-  unpaid_hoadon: {
-    method: 'GET',
-    endpoint: '/hoadon/unpaid'
   }
 };
 

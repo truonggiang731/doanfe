@@ -18,11 +18,12 @@ const AddHouse = () => {
   const [canHo, setCanHo] = useState([])
   const [loaiCanHo, setLoaiCanHo] = useState([])
   const [toaNha, setToaNha] = useState([])
+  const [isOk, setisOk] = useState(false)
 
   const [messageApi, com] = message.useMessage();
 
   const [canHoDetail, setCanHoDetail] = useState({
-    tenCanHo: '',
+    tenCanHo: null,
     toaNhaId: 0,
     loaiCanHoId: 0,
     ghiChu: ''
@@ -50,32 +51,33 @@ const AddHouse = () => {
       setToaNha(toaNhaQuery.data);
   },[toaNhaQuery.data])
 
+
   const add = useMutation({
     mutationFn: () => apiCall('add_canho', canHoDetail),
     onSettled: () => addCanHoQuery.refetch()
   })
 
-  const addCanHo = async()=>{
-    try {
-      const res = await apiCall('add_canho', canHoDetail);
-      //console.log(res);
-    }catch(err){
-      console.log(err)
-    }
-  }
-  const getCanHo = async()=>{
-    try {
-      const res = await apiCall('get_all_canho');
-      setCanHo(res);
-      //console.log(res);
-    }catch(err){
-      console.log(err)
-    }
-  }
- console.log(canHo);
- useEffect(()=>{
-  getCanHo();
-},[])
+  // const addCanHo = async()=>{
+  //   try {
+  //     const res = await apiCall('add_canho', canHoDetail);
+  //     //console.log(res);
+  //   }catch(err){
+  //     //console.log(err)
+  //   }
+  // }
+//   const getCanHo = async()=>{
+//     try {
+//       const res = await apiCall('get_all_canho');
+//       setCanHo(res);
+//       //console.log(res);
+//     }catch(err){
+//       console.log(err)
+//     }
+//   }
+//  console.log(canHo);
+//  useEffect(()=>{
+//   getCanHo();
+// },[])
 
 
 
@@ -96,25 +98,30 @@ const AddHouse = () => {
           content: 'Vui lòng nhập đầy đủ thông tin!',
           duration: 10,
         });
-      }
+      }else{
       const exists = canHo.some(canho =>
         canho.tenCanHo === canHoDetail.tenCanHo &&
         canho.toaNhaId === canHoDetail.toaNhaId
       );
       if (!exists) {
-        addCanHo();
-        console.log("ok");
-      messageApi.open({
-        type: 'success',
-        content: 'cập nhật thành công!',
-        duration: 10,
-      });
+        messageApi.open({
+          type: 'success',
+          content: 'cập nhật thành công!',
+          duration: 10,
+        });
+        await add.mutateAsync();
+        canHoQuery.refetch();
+        console.log(canHoDetail)
       } else {
         messageApi.open({
           type: 'error',
           content: 'Căn hộ đã tồn tại trong cơ sở dữ liệu!',
           duration: 10,
         });
+      }
+      
+
+        
       }
     } catch(err){
       console.log(err)

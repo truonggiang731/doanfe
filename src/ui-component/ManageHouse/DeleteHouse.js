@@ -6,6 +6,7 @@ import useToaNhaQuery from 'hooks/useToaNhaQuery';
 import useLoaiCanHoQuery from 'hooks/useLoaiCanHoQuery';
 import { useMutation } from 'react-query';
 import { useMemo } from 'react';
+
 const { TextArea } = Input;
 
 function DeleteHouse() {
@@ -13,7 +14,6 @@ function DeleteHouse() {
   const [form] = Form.useForm();
   const [loaiCanHo, setLoaiCanHo] = useState([])
   const [toaNha, setToaNha] = useState([])
-
 
   const [canHoDetail, setCanHoDetail] = useState({
     id: 0,
@@ -82,23 +82,12 @@ const updateCanHo = async () => {
       content: 'cập nhật thành công!',
       duration: 10,
     });
-    // getCanHo();
-    // updateData();
     form.resetFields();
   }else {
-    // messageApi.open({
-    //   type: 'error',
-    //   content: 'Căn hộ đã tồn tại trong cơ sở dữ liệu!',
-    //   duration: 10,
-    // });
     console.log("lỗi dữ liệu")
   }
   } catch(err){
-    // messageApi.open({
-    //   type: 'error',
-    //   content: 'cập nhật thất bại!',
-    //   duration: 10,
-    // });
+
     console.log(err);
   }
 }
@@ -192,7 +181,21 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
   };
   const handleSubmit = async ()  => {
     try{
-      await remove.mutateAsync();
+      const res = await remove.mutateAsync();
+      if(res){
+        messageApi.open({
+          type: 'success',
+          content: 'Xóa căn hộ thành công!',
+          duration: 10,
+        });
+      } 
+      else {
+        messageApi.open({
+          type: 'warning',
+          content: 'Không thể xóa căn hộ có hợp đồng!',
+          duration: 10,
+        });
+      }
     }catch{
       console.log("lỗi del");
     }  

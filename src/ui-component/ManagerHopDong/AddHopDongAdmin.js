@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Select, Col, Row, message, DatePicker  } from 'antd';
 import { apiCall } from 'apis';
 import useCanHoQuery from 'hooks/useCanHoQuery';
-import useAddCanHoQuery from 'hooks/UseAddCanHoQuery';
 import { useMutation } from 'react-query';
-import useLoaiCanHoQuery from 'hooks/useLoaiCanHoQuery';
-import useToaNhaQuery from 'hooks/useToaNhaQuery';
 import useDichVuQuery from 'hooks/useDichVuQuery';
 import useUserQuery from 'hooks/useUserQuery';
 import useAddHopDongQuery from 'hooks/useAddHopDongQuery';
@@ -13,12 +10,11 @@ import useHopDongQuery from 'hooks/useHopDongQuery';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
-const dateFormat = 'YYYY/MM/DD';
+const dateFormat = 'YYYY-MM-DD';
 
 const AddHopDongAdmin = () => {
-  const customFormat = (value) => `custom format: ${value.format(dateFormat)}`;
+  //const customFormat = (value) => `custom format: ${value.format(dateFormat)}`;
   const [form] = Form.useForm();
-  const [requiredMark, setRequiredMarkType] = useState('optional');
   const [hopDong, setHopDong] = useState([])
   const [canHo, setCanHo] = useState([])
   const [user, setUser] = useState([])
@@ -27,8 +23,8 @@ const AddHopDongAdmin = () => {
   const [messageApi, com] = message.useMessage();
 
   const [hopDongDetail, setHopDongDetail] = useState({
-    ngaydangky: new Date(),
-    ngayhethan: new Date(),
+    ngaydangky: new Date().toISOString().slice(0,10),
+    ngayhethan: new Date().toISOString().slice(0,10),
     canHoId: 0,
     dichVuId: 0,
     userId: 0
@@ -44,6 +40,7 @@ const AddHopDongAdmin = () => {
     if (dichVuQuery.data)
       setDichVu(dichVuQuery.data);
   },[dichVuQuery.data])
+  console.log()
 
   useEffect(()=>{
     if (canHoQuery.data)
@@ -56,9 +53,41 @@ const AddHopDongAdmin = () => {
   },[userQuery.data])
 
   const add = useMutation({
-    mutationFn: () => apiCall('add_hopdong', hopDongDetail),
+    mutationFn: () => apiCall('add_adminhopdong', hopDongDetail),
     onSettled: () => addHopDongQuery.refetch()
   })
+
+ const adminAddHopDong = async()=>{
+  try{
+    const res = await apiCall("add_adminhopdong", hopDongDetail);
+    allHopDong();
+    messageApi.open({
+      type:'success',
+      content: 'Thêm hợp đồng thành công',
+      duration: 10,
+    });
+    
+  }catch(err){
+    console.log(err);
+    messageApi.open({
+      type: 'error',
+      content: 'Lỗi trong quá trình thêm hợp đồng',
+      duration: 10,
+    });
+  }
+ }
+ console.log(hopDongQuery.data)
+
+ const allHopDong = async()=>{
+  try{
+    const res = await apiCall("get_all_hopdong")
+    setHopDong(res);
+    console.log(hopDong)
+  }catch{}
+ }
+ useEffect(()=>{
+  allHopDong();
+},[])
 
 
 
@@ -71,15 +100,15 @@ const AddHopDongAdmin = () => {
   const addHopdong = async () => {
     
     try{
-      if (!hopDongDetail.ngayDangKy || !hopDongDetail.canHoId || !hopDongDetail.dichVuId || hopDongDetail.userId) {
+      if (!hopDongDetail.ngaydangky || hopDongDetail.canHoId===0 || !hopDongDetail.dichVuId===0 || !hopDongDetail.userId===0 || !hopDongDetail.ngayhethan) {
         messageApi.open({
           type: 'warning',
           content: 'Vui lòng nhập đầy đủ thông tin!',
           duration: 10,
         });
       }else{
-        const exists = hopDongQuery.data.some(hopdong =>
-          hopdong.ngayDangKy === hopDongDetail.ngayDangKy &&
+        const exists = hopDong.some(hopdong =>
+          hopdong.ngaydangky === hopDongDetail.ngaydangky &&
           hopdong.canHoId === hopDongDetail.canHoId &&
           hopdong.userId === hopDongDetail.userId&&
           hopdong.dichVuId === hopDongDetail.dichVuId
@@ -95,17 +124,19 @@ const AddHopDongAdmin = () => {
         } else {
           messageApi.open({
             type: 'error',
-            content: 'Căn hộ đã được đăng ký dịch vụ này!',
+            content: 'Hợp đã được đăng ký dịch vụ này!',
             duration: 10,
           });
         }
       }
       
-    } catch{
-      console.log("khong add duoc can ho")
+    } catch(err){
+      console.log("khong add duoc hopdong")
+      console.log(err)
     }
 
   }
+  console.log(hopDongDetail);
 // //[API]
 
 
@@ -130,7 +161,7 @@ const AddHopDongAdmin = () => {
         label="Ngày hết hạn"
         style={{padding:5, width:'100%'}} 
       >
-        <DatePicker defaultValue={dayjs()} format={dateFormat}
+        <DatePicker defaultValue={dayjs} format={dateFormat}
           onChange={(e)=> setHopDongDetail({...hopDongDetail, ngayhethan: e.target.value})}
           style={{width: '100%'}}  />
       </Form.Item>
@@ -159,7 +190,7 @@ const AddHopDongAdmin = () => {
           //defaultValue="lucy"
           style={{ width: '100%',padding:5}}
           onChange={(value) => setHopDongDetail({...hopDongDetail, canHoId: value})}
-          value={hopDongDetail.loaiCanHoId}
+          value={hopDongDetail.canHoId}
           options={canHo.map((option)=>({
             value: option.id,
             label: option.tenCanHo,

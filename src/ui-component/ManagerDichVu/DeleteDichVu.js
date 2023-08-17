@@ -55,7 +55,7 @@ function DeleteDichVu() {
         });
         console.log("lỗi không có dữ liệu")
       }
-  
+  else{
       const exists = dichVu.some(dichvu =>
         dichvu.id !== dichVuDetail.id &&
         dichvu.tenDichVu === dichVuDetail.tenDichVu &&
@@ -65,13 +65,12 @@ function DeleteDichVu() {
       if (!exists) {
         await update.mutateAsync();
         console.log("ok");
-      messageApi.open({
+        messageApi.open({
         type: 'success',
         content: 'cập nhật thành công!',
         duration: 10,
       });
-      // getCanHo();
-      // updateData();
+      dichVuQuery.refetch();
       form.resetFields();
     }else {
       // messageApi.open({
@@ -81,6 +80,7 @@ function DeleteDichVu() {
       // });
       console.log("lỗi dữ liệu")
     }
+  }
     } catch(err){
       // messageApi.open({
       //   type: 'error',

@@ -81,13 +81,32 @@ const other = {
           target: false
         },
         {
-          id: 'deletehouse',
+          id: 'deleteHopDong',
           title: 'Danh sách hợp đồng',
           type: 'item',
-          url: '/manageDV/delete',
+          url: '/manageHD/update',
           target: false
         },
         
+      ]
+    },
+    {
+      id: 'managehd',
+      title: 'Quản lý hóa đơn',
+      type: 'collapse',
+      // url: '/manage',
+      icon: icons.IconBuildingWarehouse,
+      // breadcrumbs: false,
+      target: true,
+      children: [
+        {
+          id: 'addHoaDon',
+          title: 'Thêm hóa đơn',
+          type: 'item',
+          url: '/managehoadon/add',
+          target: false
+        },
+       
       ]
     },
   ]

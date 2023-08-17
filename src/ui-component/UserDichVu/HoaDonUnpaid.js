@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Table, message  } from 'antd';
+import { Button, Form, Modal, Table, message  } from 'antd';
 import { apiCall } from 'apis';
 import useDichVuQuery from 'hooks/useDichVuQuery';
 import { useMutation } from 'react-query';
@@ -166,7 +166,34 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
 
   if (dichVuQuery.isLoading || canHoQuery.isLoading || userHopDongQuery.isLoading ) {
     return null;
+  } 
+  
+  const ThanhToan = async()=>{
+
   }
+
+  //MODAL
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const showModal = () => {
+    setOpen(true);
+  };
+  const handleOk = async () => {
+    setLoading(true);
+    await ThanhToan();
+    setLoading(false);
+    setOpen(false);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
+  if (canHoQuery.isLoading || loaiCanHo.isLoading || toaNhaQuery.isLoading) {
+    return null;
+  }
+
+  //MODAL
 
   return (
     <div>
@@ -179,6 +206,21 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
         <Button type="primary" onClick={handleSubmit}>Xóa</Button>
       </Form.Item>
       <Form.Item>
+      <Modal
+        open={open}
+        title="Title"
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Return
+          </Button>,
+          <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
+            Submit
+          </Button>,
+        ]}
+      >
+        </Modal>
       </Form.Item>
       </Form>
     </div>

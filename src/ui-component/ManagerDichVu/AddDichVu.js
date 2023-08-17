@@ -5,14 +5,10 @@ import useAddDichVuQuery from 'hooks/useAddDichVuQuery';
 import useLoaiDichVuQuery from 'hooks/useLoaiDichVuQuery';
 import useDichVuQuery from 'hooks/useDichVuQuery';
 import { useMutation } from 'react-query';
-const { TextArea } = Input;
 
 const AddDichVu = () => {
   const [form] = Form.useForm();
-  const [requiredMark, setRequiredMarkType] = useState('optional');
-  const [Price, setPrice] = useState('');
-  const [name,setName]=useState('')
-  const [typeDV, setTypeDV] = useState('')
+
   const [loaiDV, setLoaiDV] = useState([])
   const [dichvu, setDichvu] = useState([])
 
