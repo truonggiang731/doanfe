@@ -19,7 +19,7 @@ import {
   OutlinedInput,
   TextField,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from '@mui/material';
 
 // third party
@@ -130,20 +130,39 @@ const FirebaseRegister = ({ ...others }) => {
         initialValues={{
           email: '',
           password: '',
+          birthday: '',
+          sex: '',
+          phoneNumber: '',
+          address: '',
+          username: '',
           submit: null
         }}
 
         validationSchema={Yup.object().shape({
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-          password: Yup.string().max(255).required('Password is required')
+          password: Yup.string().max(255).required('Password is required'),
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+          console.log({
+            name: values.name,
+            username: values.username,
+            email: values.email,
+            password: values.password,
+            dateOfBirth: values.birthday,
+            sex: values.sex,
+            phoneNumber: values.phoneNumber,
+            address: values.address
+          })
           try {
-            const res = await apiCall('auth_signup', {
-              name: values.fname + ' ' + values.lname,
-              username: values.email,
+            await apiCall('auth_signup', {
+              name: values.name,
+              username: values.username,
               email: values.email,
-              password: values.password
+              password: values.password,
+              dateOfBirth: values.birthday,
+              sex: values.sex,
+              phoneNumber: values.phoneNumber,
+              address: values.address
             });
 
             navigate('/login');
@@ -168,22 +187,79 @@ const FirebaseRegister = ({ ...others }) => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="First Name"
+                  label="Name"
                   margin="normal"
-                  name="fname"
+                  name="name"
                   type="text"
                   defaultValue=""
+                  value={values.name}
+                  onChange={handleChange}
                   sx={{ ...theme.typography.customInput }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Last Name"
+                  label="Sex"
                   margin="normal"
-                  name="lname"
+                  name="sex"
                   type="text"
                   defaultValue=""
+                  value={values.sex}
+                  onChange={handleChange}
+                  sx={{ ...theme.typography.customInput }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Address"
+                  margin="normal"
+                  name="address"
+                  type="text"
+                  defaultValue=""
+                  value={values.address}
+                  onChange={handleChange}
+                  sx={{ ...theme.typography.customInput }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Birthday"
+                  margin="normal"
+                  name="birthday"
+                  type="date"
+                  defaultValue=""
+                  value={values.birthday}
+                  onChange={handleChange}
+                  sx={{ ...theme.typography.customInput }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Phone number"
+                  margin="normal"
+                  name="phoneNumber"
+                  type="text"
+                  defaultValue=""
+                  value={values.phoneNumber}
+                  onChange={handleChange}
+                  sx={{ ...theme.typography.customInput }}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Username"
+                  margin="normal"
+                  name="username"
+                  type="text"
+                  defaultValue=""
+                  value={values.username}
+                  onChange={handleChange}
                   sx={{ ...theme.typography.customInput }}
                 />
               </Grid>

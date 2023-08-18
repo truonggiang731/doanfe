@@ -32,7 +32,8 @@ function AddHoaDon() {
   })
 
   const [hoaDonDetail, setHoaDonDetail] = useState({
-    ngayLap: new Date().toISOString().slice(0,10)
+    ngayLap: new Date().toISOString().slice(0,10),
+    hopDongId: 0
   })
 
   const hopDongQuery = useUsedHopDongQuery();
@@ -92,7 +93,6 @@ function AddHoaDon() {
    
 const addHoaDon = async () => {
   try{
-    await hoaDonQuery;
     if (!hoaDonDetail.ngayLap ) {
         messageApi.open({
           type: 'warning',
@@ -100,10 +100,6 @@ const addHoaDon = async () => {
           duration: 10,
         });
       }else{
-        const exists = hoaDon.some(hoadon =>
-          hoadon.ngayLap === hoaDonDetail.ngayLap 
-        );
-        if (!exists) {
           await add.mutateAsync();
           hopDongQuery.refetch();
           console.log("ok");
@@ -112,18 +108,15 @@ const addHoaDon = async () => {
           content: 'cập nhật thành công!',
           duration: 10,
         });
+
         form.resetFields();
-        } else {
-          messageApi.open({
-            type: 'error',
-            content: 'Căn hộ đã được đăng ký dịch vụ này!',
-            duration: 10,
-          });
-        }
       }
-
   } catch(err){
-
+    messageApi.open({
+      type: 'error',
+      content: err.message,
+      duration: 10,
+    });
     console.log(err);
   }
 }
@@ -181,6 +174,7 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
       ngayhethan: new Date().toISOString().slice(0,10),
       trangThai: ''
     });
+    setHoaDonDetail({...hoaDonDetail, hopDongId:  data[selectedId].id})
     console.log(selectedRowKeys);
   };
   const rowSelection = {
@@ -290,8 +284,9 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
         label="Ngày lập"
         style={{padding:5, width:'100%'}} 
       >
-          <DatePicker defaultValue={dayjs()} format={dateFormat}
-          onChange={(e)=> setHoaDonDetail({...hoaDonDetail, ngayLap: e.target.value})}
+          <DatePicker format={dateFormat}
+          value={dayjs(hoaDonDetail.ngayLap)}
+          onChange={(e, x)=> setHoaDonDetail({...hoaDonDetail, ngayLap: x})}
           style={{width: '100%'}}  />
       </Form.Item>
       <Col span={12}>

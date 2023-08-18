@@ -106,7 +106,13 @@ const other = {
           url: '/managehoadon/add',
           target: false
         },
-       
+        {
+          id: 'listHoaDon',
+          title: 'Danh sách hóa đơn',
+          type: 'item',
+          url: '/managehoadon',
+          target: false
+        },
       ]
     },
   ]

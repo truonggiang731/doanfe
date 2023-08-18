@@ -5,7 +5,7 @@ import useCanHoQuery from 'hooks/useCanHoQuery';
 import { useMutation } from 'react-query';
 import useDichVuQuery from 'hooks/useDichVuQuery';
 import useUserQuery from 'hooks/useUserQuery';
-import useAddHopDongQuery from 'hooks/useAddHopDongQuery';
+// import useAddHopDongQuery from 'hooks';
 import useHopDongQuery from 'hooks/useHopDongQuery';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -23,14 +23,15 @@ const AddHopDongAdmin = () => {
   const [messageApi, com] = message.useMessage();
 
   const [hopDongDetail, setHopDongDetail] = useState({
-    ngaydangky: new Date().toISOString().slice(0,10),
-    ngayhethan: new Date().toISOString().slice(0,10),
+    ngaydangky: new Date().toISOString().slice(0, 10),
+    ngayhethan: new Date().toISOString().slice(0, 10),
     canHoId: 0,
     dichVuId: 0,
-    userId: 0
+    userId: 0,
+    trangThai: "Được sử dụng"
   })
 
-  const addHopDongQuery = useAddHopDongQuery();
+  // const addHopDongQuery = useAddHopDongQuery();
   const hopDongQuery = useHopDongQuery();
   const canHoQuery = useCanHoQuery();
   const dichVuQuery = useDichVuQuery();
@@ -54,7 +55,7 @@ const AddHopDongAdmin = () => {
 
   const add = useMutation({
     mutationFn: () => apiCall('add_adminhopdong', hopDongDetail),
-    onSettled: () => addHopDongQuery.refetch()
+    onSettled: () => hopDongQuery.refetch()
   })
 
  const adminAddHopDong = async()=>{
@@ -116,7 +117,7 @@ const AddHopDongAdmin = () => {
         if (!exists) {
           await add.mutateAsync();
           console.log("ok");
-        messageApi.open({
+          messageApi.open({
           type: 'success',
           content: 'cập nhật thành công!',
           duration: 10,
@@ -154,7 +155,10 @@ const AddHopDongAdmin = () => {
         style={{padding:5, width:'100%'}} 
       >
           <DatePicker defaultValue={dayjs()} format={dateFormat}
-          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngaydangky: e.target.value})}
+          value={dayjs(hopDongDetail.ngaydangky)}
+          onChange={(e, x)=> {
+            setHopDongDetail({...hopDongDetail, ngaydangky: x})
+          }}
           style={{width: '100%'}}  />
       </Form.Item>
       <Form.Item 
@@ -162,7 +166,8 @@ const AddHopDongAdmin = () => {
         style={{padding:5, width:'100%'}} 
       >
         <DatePicker defaultValue={dayjs} format={dateFormat}
-          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngayhethan: e.target.value})}
+          value={dayjs(hopDongDetail.ngayhethan)}
+          onChange={(e, x)=> setHopDongDetail({...hopDongDetail, ngayhethan: x})}
           style={{width: '100%'}}  />
       </Form.Item>
       <Col span={12}>

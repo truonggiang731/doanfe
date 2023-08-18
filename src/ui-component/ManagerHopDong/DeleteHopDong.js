@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import useAddHopDongQuery from 'hooks/useAddHopDongQuery';
+// import useAddHopDongQuery from 'hooks/useAddHopDongQuery';
 import useHopDongQuery from 'hooks/useHopDongQuery';
 import useDichVuQuery from 'hooks/useDichVuQuery';
 import useUserQuery from 'hooks/useUserQuery';
@@ -296,7 +296,7 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
         style={{padding:5, width:'100%'}} 
       >
           <DatePicker defaultValue={dayjs()} format={dateFormat}
-          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngaydangky: e.target.value})}
+          //onChange={(e)=> setHopDongDetail({...hopDongDetail, ngaydangky: e.target.value})}
           style={{width: '100%'}}  />
       </Form.Item>
       <Form.Item 
@@ -304,7 +304,7 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
         style={{padding:5, width:'100%'}} 
       >
         <DatePicker defaultValue={dayjs()} format={dateFormat}
-          onChange={(e)=> setHopDongDetail({...hopDongDetail, ngayhethan: e.target.value})}
+          //onChange={(e)=> setHopDongDetail({...hopDongDetail, ngayhethan: e.target.value})}
           style={{width: '100%'}}  />
       </Form.Item>
       <Col span={12}>
@@ -315,7 +315,7 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
           //defaultValue="lucy"
           style={{ padding:5}}
           value={hopDongDetail.userId}
-          onChange={(value) => setHopDongDetail({...hopDongDetail, userId: value})}
+          //onChange={(value) => setHopDongDetail({...hopDongDetail, userId: value})}
           options={user.map((option)=>({
             value: option.id,
             label: option.name,
@@ -331,7 +331,7 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
           <Select
           //defaultValue="lucy"
           style={{ width: '100%',padding:5}}
-          onChange={(value) => setHopDongDetail({...hopDongDetail, canHoId: value})}
+          //onChange={(value) => setHopDongDetail({...hopDongDetail, canHoId: value})}
           value={hopDongDetail.canHoId}
           options={canHo.map((option)=>({
             value: option.id,
@@ -347,7 +347,7 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
           <Select
           //defaultValue="lucy"
           style={{ width: '100%',padding:5}}
-          onChange={(value) => setHopDongDetail({...hopDongDetail, dichVuId: value})}
+          //onChange={(value) => setHopDongDetail({...hopDongDetail, dichVuId: value})}
           value={hopDongDetail.dichVuId}
           options={dichVu.map((option)=>({
             value: option.id,

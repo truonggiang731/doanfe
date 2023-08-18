@@ -8,11 +8,22 @@ import useCanHoQuery from 'hooks/useCanHoQuery';
 import useUserHopDongQuery from 'hooks/useUserHopDongQuery';
 import useUnpaidHoaDonQuery from 'hooks/useUnpaidHoaDonQuery';
 
+import {CardElement, Elements, useElements, useStripe} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+import { isAxiosError } from 'axios';
+
+import "./style.css"
+
+const stripePromise = loadStripe('pk_test_51IFwpWCpBejooWZYsmTcqPL7wfAcx58B6lQNiE3K8XEueAbjRJCRzczedDQO3LbJ1afIh6oln6VT6SZXOZYtiL6G00Ow7S9qTG', 'vi');
+
 function HoaDonUnpaid() {
   const [dichVu, setDichVu] = useState([])
   const [hopDong, setHopDong] = useState([])
   const [canHo, setCanHo] = useState([])
   const [hoaDon, setHoaDon] = useState([])
+
+
+  const [hoaDonId, setHoaDonId] = useState(0);
 
   const [messageApi, com] = message.useMessage();
 
@@ -24,23 +35,13 @@ function HoaDonUnpaid() {
   const canHoQuery = useCanHoQuery();
   const userHopDongQuery = useUserHopDongQuery();
   const unpaidHoaDonQuery = useUnpaidHoaDonQuery();
-  
-  
-  const getHoaDon = async()=>{
-    try {
-      const res = await apiCall('unpaid_hoadon');
-      setHoaDon(res);
-      //console.log(res);
-    }catch(err){
-      console.log(err)
+
+
+  useEffect(() => {
+    if (unpaidHoaDonQuery.data) {
+      setHoaDon(unpaidHoaDonQuery.data);
     }
-  }
- console.log(hoaDon);
- useEffect(()=>{
-  getHoaDon();
-},[])
-
-
+  }, [unpaidHoaDonQuery.data])
 
   useEffect(()=>{
     if (dichVuQuery.data)
@@ -61,10 +62,7 @@ function HoaDonUnpaid() {
 //       setHoaDon(unpaidHoaDonQuery.data);
 //   },[unpaidHoaDonQuery.data])
 
-  const remove = useMutation({
-    mutationFn: () => apiCall('delete_hopdong', hopDongDetail),
-    onSettled: () => dichVuQuery.refetch()
-  })
+  
 
   const data = useMemo(() => {
     const data = hoaDon.map((x, i) => {
@@ -81,7 +79,7 @@ function HoaDonUnpaid() {
     });
   
     return data;
-  }, [dichVu, canHo, hopDong])
+  }, [dichVu, canHo, hopDong, hoaDon])
   const columns = [
     {
       title: 'Ngày lập',
@@ -115,7 +113,7 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
     const selectedId = newSelectedRowKeys.length === 1 ? newSelectedRowKeys[0] : '';
-    setHopDongDetail(hopDong.find(x => x.id === data[selectedId].id) || {id: 0})
+    setHoaDonId(data[selectedId].id);
     console.log(selectedRowKeys);
   };
   const rowSelection = {
@@ -156,17 +154,9 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
       },
     ],
   };
-  const handleSubmit = async ()  => {
-    try{
-      await remove.mutateAsync();
-    }catch{
-      console.log("lỗi del");
-    }  
-  }
+  
 
-  if (dichVuQuery.isLoading || canHoQuery.isLoading || userHopDongQuery.isLoading ) {
-    return null;
-  } 
+ 
   
   const ThanhToan = async()=>{
 
@@ -178,9 +168,10 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
   const showModal = () => {
     setOpen(true);
   };
+
   const handleOk = async () => {
+    // console.log(hoaDonDetail);
     setLoading(true);
-    await ThanhToan();
     setLoading(false);
     setOpen(false);
   };
@@ -189,8 +180,38 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
     setOpen(false);
   };
 
-  if (canHoQuery.isLoading || loaiCanHo.isLoading || toaNhaQuery.isLoading) {
+  if (dichVuQuery.isLoading || canHoQuery.isLoading || userHopDongQuery.isLoading ) {
     return null;
+  }
+
+  async function cardPayment(token) {
+    apiCall('payment', {invoiceId: hoaDonId, token: token})
+      .then(() => {
+        messageApi.open({
+          type: 'success',
+          content: "Thanh toán thành công!",
+          duration: 10,
+        });
+
+        unpaidHoaDonQuery.refetch();
+
+        setOpen(false);
+      })
+      .catch((error) => {
+        if (isAxiosError(error) && error.response) {
+          messageApi.open({
+            type: 'error',
+            content: "Kiểm tra lại kết nối!",
+            duration: 10,
+          });
+        } else {
+          messageApi.open({
+            type: 'error',
+            content: "Thanh toán không thành công!",
+            duration: 10,
+          });
+        }
+      })
   }
 
   //MODAL
@@ -203,7 +224,7 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
         <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
         </Form.Item>
       <Form.Item>
-        <Button type="primary" onClick={handleSubmit}>Xóa</Button>
+        <Button type="primary" onClick={showModal}>Thanh toán</Button>
       </Form.Item>
       <Form.Item>
       <Modal
@@ -214,16 +235,67 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
         footer={[
           <Button key="back" onClick={handleCancel}>
             Return
-          </Button>,
-          <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
-            Submit
-          </Button>,
+          </Button>
         ]}
       >
-        </Modal>
+         <Elements stripe={stripePromise || null}>
+            <CheckoutForm onSubmitted={cardPayment} />
+          </Elements>
+      </Modal>  
       </Form.Item>
       </Form>
     </div>
   )
 }
+
+const CheckoutForm = ({onSubmitted}) => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (event) => {
+    setLoading(true);
+    event.preventDefault();
+
+    console.log(elements);
+
+    if (elements == null) {
+      return;
+    }
+
+  
+
+    const stripResponse = await stripe.createToken(elements.getElement(CardElement))
+
+    console.log(stripResponse);
+
+    await onSubmitted(stripResponse.token?.id || '');
+    setLoading(false);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+          <CardElement options={{
+            hidePostalCode: true,
+            style: {
+              base: {
+                fontSize: '1.0em',
+       
+                '::placeholder': {
+         
+                },
+           
+                padding: '8px 12px',
+              },
+              invalid: {
+      
+              }
+            },
+          }}
+          />
+          <button type='submit'>submit</button>
+    </form>
+  );
+};
+
 export default HoaDonUnpaid;

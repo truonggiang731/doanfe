@@ -57,13 +57,18 @@ const AddHopDong = () => {
     try{
         await add.mutateAsync();
         console.log("ok");
-      messageApi.open({
+        messageApi.open({
         type: 'success',
         content: 'cập nhật thành công!',
         duration: 10,
       });
     } catch{
       console.log("Thêm thất bại")
+      messageApi.open({
+        type: 'error',
+        content: 'Thêm hợp đồng thất bại!',
+        duration: 10,
+      });
     }
 
   }
@@ -105,7 +110,7 @@ const AddHopDong = () => {
           onChange={(value) => setHopDongDetail({...hopDongDetail, dichVuId: value})}
           options={dichVu.map((option)=>({
             value: option.id,
-            label: option.name,
+            label: option.tenDichVu,
           })
           ) } 
         />
@@ -120,7 +125,7 @@ const AddHopDong = () => {
           onChange={(value) => setHopDongDetail({...hopDongDetail, canHoId: value})}
           options={canHo.map((option)=>({
             value: option.id,
-            label: option.name,
+            label: option.tenCanHo,
           })
           ) } 
         />

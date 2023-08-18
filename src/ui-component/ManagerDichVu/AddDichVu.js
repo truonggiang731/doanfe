@@ -51,8 +51,7 @@ const addDichVu = async () => {
       });
     }
     const exists = dichvu.some(dichVu =>
-      dichVu.tenDichVu === dichVuDetail.tenDichVu &&
-      dichVu.loaiDichVuId === dichVuDetail.loaiDichVuId
+      dichVu.tenDichVu === dichVuDetail.tenDichVu 
     );
     if (!exists) {
       await add.mutateAsync();

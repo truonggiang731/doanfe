@@ -12,6 +12,8 @@
     "@mui/material": "^5.8.6",
     "@mui/system": "^5.8.6",
     "@mui/utils": "^5.8.6",
+    "@stripe/react-stripe-js": "^2.1.2",
+    "@stripe/stripe-js": "^2.1.0",
     "@tabler/icons": "^1.72.0",
     "antd": "^5.8.2",
     "apexcharts": "^3.35.3",

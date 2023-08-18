@@ -75,7 +75,7 @@ export async function apiCall(key, data, config) {
 
   switch (method) {
     case 'GET':
-      return _get(endpoint, config);
+      return _get(`${endpoint}${data && data.id ? `/${data.id}` : ''}`, config);
     case 'POST':
       return _post(endpoint, data, config);
     case 'PUT':

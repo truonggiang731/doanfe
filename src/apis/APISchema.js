@@ -7,6 +7,10 @@ export const APISchema = {
     method: 'POST',
     endpoint: '/auth/signup'
   },
+  payment: {
+    method: 'POST',
+    endpoint: '/payment/process-payment'
+  },
   get_all_canho: {
     method: 'GET',
     endpoint: '/canho'
@@ -58,6 +62,10 @@ export const APISchema = {
   hoadon_hopdong: {
     method: 'GET',
     endpoint: '/hoadon/hopdong'
+  },
+  add_hopdong:{
+    method: 'POST',
+    endpoint: '/hopdong'
   },
   add_adminhopdong: {
     method: 'POST',

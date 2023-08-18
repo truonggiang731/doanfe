@@ -31,7 +31,7 @@ const AddHouse = () => {
   
   })
 
-  const addCanHoQuery = useAddCanHoQuery();
+  //const addCanHoQuery = useAddCanHoQuery();
   const loaiCanHoQuery = useLoaiCanHoQuery();
   const canHoQuery = useCanHoQuery();
   const toaNhaQuery = useToaNhaQuery();
@@ -54,7 +54,7 @@ const AddHouse = () => {
 
   const add = useMutation({
     mutationFn: () => apiCall('add_canho', canHoDetail),
-    onSettled: () => addCanHoQuery.refetch()
+    onSettled: () => canHoQuery.refetch()
   })
 
   // const addCanHo = async()=>{
@@ -110,7 +110,6 @@ const AddHouse = () => {
           duration: 10,
         });
         await add.mutateAsync();
-        canHoQuery.refetch();
         console.log(canHoDetail)
       } else {
         messageApi.open({
