@@ -53,8 +53,8 @@ function UserDichVu() {
     const data = hopDong.map((x, i) => {return {
       ...x,
       key: i,
-      tenDichVu: dichVu.find(y => y.id === x.dichVuId).name,
-      tenCanHo: canHo.find(y => y.id === x.canHoId).name
+      tenDichVu: dichVu.find(y => y.id === x.dichVuId).tenDichVu,
+      tenCanHo: canHo.find(y => y.id === x.canHoId).tenCanHo
     }});
   
     return data;
@@ -71,6 +71,10 @@ const columns = [
   {
     title: 'Tên căn hộ',
     dataIndex: 'tenCanHo',
+  },
+  {
+    title: 'Tên dịch vụ',
+    dataIndex: 'tenDichVu',
   },
   {
     title: 'Trạng thái',

@@ -85,10 +85,7 @@ function AddHoaDon() {
     onSettled: () => hoaDonQuery.refetch()
   })
 
-  const remove = useMutation({
-    mutationFn: () => apiCall('delete_hopdong', hopDongDetail),
-    onSettled: () => hopDongQuery.refetch()
-  })
+
 
    
 const addHoaDon = async () => {
@@ -215,13 +212,7 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
       },
     ],
   };
-  const handleSubmit = async ()  => {
-    try{
-      await remove.mutateAsync();
-    }catch{
-      console.log("lỗi del");
-    }  
-  }
+
   //TABLE
   //MODAL
   const [loading, setLoading] = useState(false);
@@ -255,11 +246,8 @@ const [selectedRowKeys, setSelectedRowKeys] = useState('');
         <Table rowSelection={rowSelection} columns={columns} dataSource={data} />;
         </Form.Item>
       <Form.Item>
-        <Button type="primary" onClick={handleSubmit}>Xóa</Button>
-      </Form.Item>
-      <Form.Item>
       <Button type="primary" onClick={showModal}>
-        Sửa
+        Thêm hóa đơn
       </Button>
       <Modal
         open={open}

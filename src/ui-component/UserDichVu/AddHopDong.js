@@ -55,13 +55,24 @@ const AddHopDong = () => {
 
   const addHouse = async () => {
     try{
-        await add.mutateAsync();
-        console.log("ok");
+        const res = await add.mutateAsync();
+        if(!res){
+          console.log("Thêm thất bại")
+          messageApi.open({
+          type: 'error',
+          content: 'Thêm hợp đồng thất bại vì bạn chưa thuê căn hộ này!',
+          duration: 10,
+      });
+        }
+        else{
+          console.log("ok");
         messageApi.open({
         type: 'success',
         content: 'cập nhật thành công!',
         duration: 10,
       });
+        }
+        
     } catch{
       console.log("Thêm thất bại")
       messageApi.open({
